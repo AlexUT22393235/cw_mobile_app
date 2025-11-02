@@ -1,132 +1,147 @@
 import 'package:flutter/material.dart';
 import '../widgets/common/pixel_text_field.dart';
 import '../widgets/common/pixel_button.dart';
+import '../widgets/common/text/pixel_text.dart';
+import '../widgets/common/text/styles/text_styles.dart';
 
-class RegisterPage extends StatelessWidget {
-  // Nota: Pasar 'onLoginRequested' podría ser un VoidCallback para navegar
-  // de vuelta a la pantalla de Login, pero por ahora solo es maquetado.
-  const RegisterPage({Key? key}) : super(key: key);
+class RegisterPage extends StatefulWidget {
+  final VoidCallback onLoginRequested; 
 
-  // Widget para el texto de estilo pixelado (Reutilizado de LoginPage)
-  Widget _buildPixelText(String text, {double fontSize = 16.0, Color color = Colors.white, FontWeight fontWeight = FontWeight.normal}) {
-    return Text(
-      text,
-      textAlign: TextAlign.center,
-      style: TextStyle(
-        color: color,
-        fontSize: fontSize,
-        fontWeight: fontWeight,
-        fontFamily: 'PixelFont', // Reemplazar con tu fuente real
-      ),
-    );
+  const RegisterPage({
+    Key? key,
+    required this.onLoginRequested,
+  }) : super(key: key);
+
+  @override
+  State<RegisterPage> createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+  late final TextEditingController _usuarioController;
+  late final TextEditingController _correoController;
+  late final TextEditingController _passwordController;
+  late final TextEditingController _confirmPasswordController;
+
+  @override
+  void initState() {
+    super.initState();
+    _usuarioController = TextEditingController();
+    _correoController = TextEditingController();
+    _passwordController = TextEditingController();
+    _confirmPasswordController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _usuarioController.dispose();
+    _correoController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    // Definiciones de estilo (Reutilizadas de LoginPage)
-    const Color darkBackground = Color(0xFF1A1A2E); 
-    const Color coldWarBlue = Color(0xFF33FFC4); 
+    const Color darkBackground = Color(0xFF1A1A2E);
+    const Color coldWarBlue = Color(0xFF33FFC4);
 
-    return Scaffold(
-      backgroundColor: darkBackground,
-      appBar: AppBar(
-        // AppBar simple para simular un botón de regreso
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: coldWarBlue),
-      ),
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
-          child: Container(
-            // El "marco" o caja principal (Reutilizado)
-            decoration: BoxDecoration(
-              border: Border.all(color: coldWarBlue, width: 4.0),
-              color: darkBackground.withOpacity(0.8),
-            ),
-            padding: const EdgeInsets.all(20.0),
-            constraints: const BoxConstraints(maxWidth: 400),
-            
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                // Título principal: COLDWAR (Reutilizado)
-                _buildPixelText(
-                  'COLDWAR',
-                  fontSize: 48.0,
-                  color: coldWarBlue,
-                  fontWeight: FontWeight.bold,
-                ),
-                Container(height: 2.0, color: coldWarBlue, width: 150.0), // Subrayado
-                const SizedBox(height: 30.0),
+    return SingleChildScrollView(
+      key: const ValueKey('RegisterContent'),
+      padding: const EdgeInsets.all(16.0),
+      
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: coldWarBlue, width: 4.0),
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        padding: const EdgeInsets.all(4.0),
+        
+        child: Container(
+          decoration: BoxDecoration(
+            color: darkBackground.withOpacity(0.85),
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          padding: const EdgeInsets.all(20.0),
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width * 0.9,
+          ),
+          
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              // Título principal: COLDWAR
+              PixelText.displayLarge(
+                'COLDWAR',
+                color: coldWarBlue,
+                
+              ),
+              Container(height: 2.0, color: coldWarBlue, width: 180.0),
+              const SizedBox(height: 30.0),
 
-                // Título: REGISTRARSE
-                _buildPixelText(
-                  'CREAR CUENTA',
-                  fontSize: 24.0,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-                const SizedBox(height: 20.0),
+              // Título: REGÍSTRATE
+              PixelText.titleLarge(
+                'REGÍSTRATE',
+                color: Colors.white,
+              ),
+              const SizedBox(height: 20.0),
+              
+              // Campos de texto con sus controladores
+              PixelTextField(
+                labelText: 'USUARIO',
+                controller: _usuarioController,
+              ),
+              const SizedBox(height: 15.0),
 
-                // Campo Correo Electrónico
-                const PixelTextField(
-                  labelText: 'CORREO tu_correo@dominio.com',
-                ),
-                const SizedBox(height: 15.0),
+              PixelTextField(
+                labelText: 'CORREO ELECTRÓNICO',
+                keyboardType: TextInputType.emailAddress,
+                controller: _correoController,
+              ),
+              const SizedBox(height: 15.0),
 
-                // Campo Usuario
-                const PixelTextField(
-                  labelText: 'USUARIO tu_usuario',
-                ),
-                const SizedBox(height: 15.0),
+              PixelTextField(
+                labelText: 'CONTRASEÑA',
+                obscureText: true,
+                controller: _passwordController,
+              ),
+              const SizedBox(height: 15.0),
 
-                // Campo Contraseña
-                const PixelTextField(
-                  labelText: 'CONTRASEÑA ********',
-                  obscureText: true,
-                ),
-                const SizedBox(height: 15.0),
+              PixelTextField(
+                labelText: 'CONFIRMAR CONTRASEÑA',
+                obscureText: true,
+                controller: _confirmPasswordController,
+              ),
+              const SizedBox(height: 30.0),
 
-                // Campo Confirmar Contraseña (Adicional para Registro)
-                const PixelTextField(
-                  labelText: 'CONFIRMAR ********',
-                  obscureText: true,
-                ),
-                const SizedBox(height: 30.0),
+              // Botón CREAR CUENTA
+              PixelButton(
+                text: 'CREAR CUENTA',
+                onPressed: () {
+                  // Aquí se implementará la lógica de registro
+                },
+              ),
+              const SizedBox(height: 25.0),
 
-                // Botón REGISTRARME
-                const PixelButton(
-                  text: 'REGISTRARME',
-                ),
-                const SizedBox(height: 25.0),
-
-                // Enlace inferior (Volver a Login)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _buildPixelText(
-                      '¿Ya tienes cuenta? ',
-                      fontSize: 14.0,
-                      color: Colors.white70,
+              // Enlace inferior (Volver a Login) - USANDO WRAP PARA RESPONSIVE
+              Wrap(
+                alignment: WrapAlignment.center,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                spacing: 4.0,
+                children: [
+                  PixelText.bodySmall(
+                    '¿Ya tienes cuenta?',
+                    color: Colors.white70,
+                  ),
+                  GestureDetector(
+                    onTap: widget.onLoginRequested,
+                    child: PixelText.bodySmall(
+                      'INICIA SESIÓN',
+                      color: coldWarBlue,
                     ),
-                    // Texto INICIA SESIÓN con el color de énfasis
-                    GestureDetector(
-                      // Aquí iría la navegación de vuelta a Login
-                      onTap: () {
-                        // Ejemplo: Navigator.pop(context); 
-                      },
-                      child: _buildPixelText(
-                        'INICIA SESIÓN',
-                        fontSize: 14.0,
-                        color: coldWarBlue,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),

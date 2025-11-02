@@ -4,43 +4,42 @@ class PixelTextField extends StatelessWidget {
   final String labelText;
   final bool obscureText;
   final TextEditingController? controller;
+  final TextInputType keyboardType;
 
   const PixelTextField({
     Key? key,
     required this.labelText,
     this.obscureText = false,
     this.controller,
+    this.keyboardType = TextInputType.text,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      // Simula el borde "pixelado" con un simple Container
       decoration: BoxDecoration(
-        border: Border.all(
-          color: Colors.white,
-          width: 2.0, // Simula el grosor del borde
-        ),
-        color: Colors.transparent,
+        color: Colors.white, // Fondo blanco
+        borderRadius: BorderRadius.circular(8.0), // Bordes redondeados
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
       child: TextField(
         controller: controller,
         obscureText: obscureText,
+        keyboardType: keyboardType,
+        textAlign: TextAlign.left,
         style: const TextStyle(
-          color: Colors.white,
+          color: Colors.black, // Texto negro
           fontSize: 16.0,
-          fontFamily: 'PixelFont', // Usar una fuente personalizada si la tienes
+          fontFamily: 'PressStart2P', // ¡Tu fuente pixelada!
         ),
         decoration: InputDecoration(
-          hintText: labelText,
+          hintText: labelText.toUpperCase(), // El labelText es el hint
           hintStyle: TextStyle(
-            color: Colors.white.withOpacity(0.5),
+            color: Colors.grey[600], // Placeholder gris
             fontSize: 14.0,
+            fontFamily: 'PressStart2P',
           ),
-          contentPadding: EdgeInsets.zero,
-          isDense: true,
-          border: InputBorder.none, // Quitamos el borde por defecto del TextField
+          border: InputBorder.none, // Eliminar borde nativo
+          contentPadding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
         ),
       ),
     );
