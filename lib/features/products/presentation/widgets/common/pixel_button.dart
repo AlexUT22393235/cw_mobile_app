@@ -9,7 +9,7 @@ class PixelButton extends StatelessWidget {
     Key? key,
     required this.text,
     this.onPressed,
-    this.color = const Color(0xFF33FFC4), // Color turquesa
+    this.color = const Color(0xFF00C7B1), // Color turquesa
   }) : super(key: key);
 
   @override
@@ -27,10 +27,10 @@ class PixelButton extends StatelessWidget {
         child: Text(
           text.toUpperCase(),
           style: const TextStyle(
-            color: Colors.black,
+            color: Colors.white,
             fontSize: 18.0,
             fontWeight: FontWeight.bold,
-            fontFamily: 'PixelFont', // La fuente que configuramos
+            fontFamily: 'PressStart2P', // La fuente que configuramos
           ),
         ),
       ),

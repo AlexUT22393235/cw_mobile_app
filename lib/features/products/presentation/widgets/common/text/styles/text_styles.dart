@@ -8,9 +8,9 @@ class PixelTextStyles {
   static const double medium = 14.0;
   static const double large = 16.0;
   static const double extraLarge = 18.0;
-  static const double title = 24.0;
+  static const double title = 20.0;
   static const double headline = 32.0;
-  static const double display = 40.0;
+  static const double display = 38.0;
 
   // Estilos predefinidos
   static TextStyle displayLarge({Color color = Colors.white}) {
