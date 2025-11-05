@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pixelarticons/pixelarticons.dart'; // Para los íconos de control
 
 // Importación del layout general
 import '../screens/general/basic_general_screen.dart'; 
@@ -6,6 +7,8 @@ import '../screens/general/basic_general_screen.dart';
 import '../widgets/lore/lore_1.dart';
 // Importación de texto modular
 import '../widgets/common/text/pixel_text.dart'; 
+// Importación de botones
+import '../widgets/common/pixel_button.dart'; 
 
 class LorePage extends StatefulWidget {
   const LorePage({super.key});
@@ -18,69 +21,100 @@ class _LorePageState extends State<LorePage> with SingleTickerProviderStateMixin
   
   // Constantes de estilo
   static const Color coldWarBlue = Color(0xFF33FFC4);
-  
+  // Definición de colores dinámicos
+  static const Color playColor = Color(0xFF5FFB17); // Verde
+  static const Color pauseColor = Color(0xFFF91818); // Rojo
+
   // Controlador de scroll para mover el texto
   final ScrollController _scrollController = ScrollController();
   
-  // Estado de la animación (simplificado)
+  bool _isAnimating = false; 
   bool _isPaused = false;
   
   // Duración de la animación (ajustable)
   static const Duration _scrollDuration = Duration(seconds: 80); 
   
-  // Referencia al futuro, usada para reanudar
-  Future<void>? _scrollAnimationFuture; 
-
-  // Función principal para iniciar/reanudar el scroll
-  void _startOrResumeScroll() {
+  // Función para iniciar la animación (o reanudar)
+  void _startAnimation() {
     if (!_scrollController.hasClients) return;
     
+    setState(() {
+      _isAnimating = true;
+      _isPaused = false;
+    });
+
     final double maxScroll = _scrollController.position.maxScrollExtent;
     
-    // Si ya estamos al final o no hay contenido para scrollear, salimos.
-    if (_scrollController.offset >= maxScroll) return;
+    // Si ya estamos al final, reiniciamos antes de animar
+    if (_scrollController.offset >= maxScroll) {
+      _resetScroll(); 
+      // Usamos WidgetsBinding para asegurar que el jumpTo se complete antes de la animación
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _animateScroll(maxScroll, _scrollDuration);
+      });
+      return; 
+    }
 
-    // Calculamos la duración restante para mantener la velocidad
+    _animateScroll(maxScroll, _scrollDuration);
+  }
+
+  // Helper para manejar la animación con duración restante
+  void _animateScroll(double maxScroll, Duration totalDuration) {
     final double currentOffset = _scrollController.offset;
     final double remainingDistance = maxScroll - currentOffset;
     final double totalDistance = maxScroll;
-
-    // Evitamos la división por cero si el contenido es muy pequeño
+    
     final double remainingTimeRatio = (totalDistance > 0) ? remainingDistance / totalDistance : 1.0;
-    final Duration remainingDuration = _scrollDuration * remainingTimeRatio;
+    final Duration remainingDuration = totalDuration * remainingTimeRatio;
 
-    // Almacenamos el Future para poder detenerlo más tarde
-    _scrollAnimationFuture = _scrollController.animateTo(
+    _scrollController.animateTo(
       maxScroll,
       duration: remainingDuration,
       curve: Curves.linear,
-    );
+    ).then((_) {
+      setState(() {
+        _isAnimating = false; // La animación ha terminado
+        _isPaused = false;
+      });
+    });
+  }
+  
+  // Función para reiniciar el scroll
+  void _resetScroll() {
+    if (!_scrollController.hasClients) return;
+
+    // Detener cualquier animación en curso
+    _scrollController.jumpTo(_scrollController.offset);
+    
+    // Mover el scroll al inicio inmediatamente
+    _scrollController.jumpTo(0.0);
+
+    setState(() {
+      _isAnimating = false;
+      _isPaused = false;
+    });
   }
 
-  // Función para pausar/reanudar al tocar
-  void _togglePause() {
-    // 1. Invertir el estado de pausa
-    setState(() {
-      _isPaused = !_isPaused;
-    });
 
-    if (_isPaused) {
-      // 2. DETENER: Si está pausado, detenemos la animación saltando a la posición actual.
-      // Esta es la corrección crucial de la línea 60.
+  // Función ÚNICA para manejar el botón principal (INICIAR/PAUSA/CONTINUAR)
+  void _togglePause() {
+    if (_isAnimating) {
+      // ESTADO 1: Si está animando -> PAUSAR
+      setState(() {
+        _isPaused = true;
+      });
       if (_scrollController.hasClients) {
-         _scrollController.jumpTo(_scrollController.offset); 
+         _scrollController.jumpTo(_scrollController.offset); // Detener animación
       }
     } else {
-      // 3. REANUDAR: Si se reanuda, volvemos a llamar a la función de scroll.
-      _startOrResumeScroll();
+      // ESTADO 2: Si está pausado (o detenido) -> INICIAR/CONTINUAR
+      _startAnimation();
     }
   }
 
   @override
   void initState() {
     super.initState();
-    // Iniciamos la animación
-    WidgetsBinding.instance.addPostFrameCallback((_) => _startOrResumeScroll());
   }
 
   @override
@@ -92,47 +126,85 @@ class _LorePageState extends State<LorePage> with SingleTickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     
+    // Lógica simplificada de estado: INICIAR o PAUSA
+    final IconData playPauseIcon = _isAnimating ? Pixel.pause : Pixel.play;
+    final Color buttonColor = _isAnimating ? pauseColor : playColor; // Solo cambia a rojo si está animando
+
+    // El botón siempre dice INICIAR o PAUSA
+    final String buttonText = _isAnimating ? 'PAUSA' : 'INICIAR';
+
+
     return BasicContentLayout(
       sectionTitleText: 'LORE', 
       
-      content: Stack(
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          // Área de Scroll Principal
-          GestureDetector(
-            onTap: _togglePause, // Siempre se puede tocar para pausar/reanudar
-            child: Container(
-              constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height * 0.65, // Altura visible
-              ),
-              child: SingleChildScrollView(
-                controller: _scrollController,
-                // Permitimos el scroll manual si está en pausa (o si ya terminó)
-                physics: _isPaused 
-                    ? const AlwaysScrollableScrollPhysics() 
-                    : const NeverScrollableScrollPhysics(), // Bloquea durante la animación
+          // === CONTROLES DE BOTONES ===
+          Padding(
+            padding: const EdgeInsets.only(bottom: 20.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // 1. Botón INICIAR / PAUSA
+                PixelButton(
+                  icon: playPauseIcon,
+                  text: buttonText,
+                  onPressed: _togglePause,
+                  color: buttonColor, // ✅ Consistente: Usamos 'color'
+                ),
+                const SizedBox(width: 10),
                 
-                child: const Lore1(), 
-              ),
+                // 2. Botón REINICIAR
+                PixelButton(
+                  icon: Pixel.reload, // ✅ Corregido: Usamos Pixel.refresh para el ícono
+                  text: '',
+                  onPressed: _resetScroll,
+                  color: coldWarBlue, // ✅ Consistente: Usamos 'color'
+                ),
+              ],
             ),
           ),
 
-          // ⚠️ CORRECCIÓN: Indicador de Pausa No Invasiva (en la esquina inferior derecha)
-          if (_isPaused)
-            Positioned(
-              bottom: 10,
-              right: 10,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: coldWarBlue.withOpacity(0.8),
-                  border: Border.all(color: coldWarBlue),
-                ),
-                child: PixelText.bodySmall(
-                  'PAUSA (Click para continuar)',
-                  color: Colors.black, // Texto oscuro sobre el fondo azul
+          // === ÁREA DE SCROLL PRINCIPAL ===
+          Stack(
+            children: [
+              GestureDetector(
+                onTap: _togglePause, 
+                child: Container(
+                  constraints: BoxConstraints(
+                    maxHeight: MediaQuery.of(context).size.height * 0.60,
+                  ),
+                  child: SingleChildScrollView(
+                    controller: _scrollController,
+                    physics: _isAnimating
+                        ? const NeverScrollableScrollPhysics() 
+                        : const AlwaysScrollableScrollPhysics(), // Scroll manual liberado
+                    
+                    child: const Lore1(), 
+                  ),
                 ),
               ),
-            ),
+
+              // INDICADOR DE PAUSA NO INVASIVA
+              if (_isPaused && _scrollController.hasClients && _scrollController.offset < _scrollController.position.maxScrollExtent)
+                Positioned(
+                  bottom: 10,
+                  right: 10,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: coldWarBlue.withOpacity(0.9),
+                      border: Border.all(color: coldWarBlue),
+                    ),
+                    child: PixelText.bodySmall(
+                      '',
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+            ],
+          ),
         ],
       ),
     );
