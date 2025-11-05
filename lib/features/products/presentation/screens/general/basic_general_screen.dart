@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-// Importación de los componentes base
+// Importaciones: componentes base reutilizables (marco y títulos)
 import '../../widgets/common/pixel_frame_card.dart';
 import '../../widgets/common/titles/application_title.dart';
 import '../../widgets/common/titles/section_title.dart';
 
-// Clase renombrada para reflejar que es un layout/wrapper básico y general
+// Layout: wrapper básico reutilizable para pantallas de autenticación y secciones
 class BasicContentLayout extends StatelessWidget {
-  // 1. Título dinámico de la sección (ej. 'INICIA SESIÓN')
+  // Propiedad: título de sección (ej. 'INICIA SESIÓN')
   final String sectionTitleText;
-  // 2. Contenido variable (campos, botones y enlaces)
+  // Propiedad: contenido dinámico (campos, botones y enlaces)
   final Widget content;
 
   const BasicContentLayout({
@@ -18,22 +18,21 @@ class BasicContentLayout extends StatelessWidget {
     required this.content,
   });
 
-  // Espacio vertical que queremos dejar en la parte superior del marco
-  static const double _topMarginSpace = 48.0; 
-  // Padding lateral consistente
-  static const double _horizontalPadding = 24.0; 
-  static const double _verticalPadding = 24.0; 
+  // Constantes: márgenes y paddings utilizados por el layout
+  static const double _topMarginSpace = 48.0;
+  static const double _horizontalPadding = 24.0;
+  static const double _verticalPadding = 24.0;
 
   @override
   Widget build(BuildContext context) {
-    // Usamos LayoutBuilder para obtener las restricciones de altura disponibles.
+    // Diseño: usar LayoutBuilder para obtener restricciones de altura disponibles
     return LayoutBuilder(
       builder: (context, constraints) {
-        // Usamos el SingleChildScrollView para manejar el desbordamiento en pantallas pequeñas
+        // Uso de SingleChildScrollView para manejar desbordamiento en pantallas pequeñas
         return SingleChildScrollView(
-          // CRUCIAL: Añadimos AlwaysScrollableScrollPhysics para centrar contenido corto.
+          // Physics: AlwaysScrollable para permitir centrar contenido corto
           physics: const AlwaysScrollableScrollPhysics(),
-          
+
           // === Padding Externo Ajustado ===
           padding: const EdgeInsets.only(
             top: _topMarginSpace, // Margen superior del marco (48.0)
@@ -41,20 +40,20 @@ class BasicContentLayout extends StatelessWidget {
             right: _horizontalPadding,
             bottom: _verticalPadding, // Margen inferior del marco (24.0)
           ),
-          
-          // CRUCIAL: Usamos ConstrainedBox para forzar que el contenido ocupe
-          // al menos la altura restante del área del SingleChildScrollView.
+
+          // ConstrainedBox: asegurar que el contenido ocupe al menos la altura disponible
           child: ConstrainedBox(
-            // La altura mínima es la altura disponible menos el padding vertical total
-            // (top + bottom) que está fuera del marco de la tarjeta.
+            // La altura mínima = altura disponible - padding vertical total (top + bottom)
             constraints: BoxConstraints(
-              minHeight: constraints.maxHeight - (_topMarginSpace + _verticalPadding),
+              minHeight:
+                  constraints.maxHeight - (_topMarginSpace + _verticalPadding),
             ),
             child: Center(
               // 1. El marco que se adapta al contenido (PixelFrameCard)
               child: PixelFrameCard(
                 child: Column(
-                  mainAxisSize: MainAxisSize.min, // Ajusta el tamaño al contenido
+                  mainAxisSize:
+                      MainAxisSize.min, // Ajusta el tamaño al contenido
                   children: <Widget>[
                     // Título Principal Fijo
                     const ApplicationTitle(titleText: 'COLDWAR'),

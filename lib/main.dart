@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-// Importamos el Shell que maneja el fondo animado y la navegación principal
-import 'features/products/presentation/widgets/common/app_shell.dart'; 
+// Importaciones: AppShell — capa de fondo animado y navegación principal
+import 'features/products/presentation/widgets/common/app_shell.dart';
 import 'features/products/presentation/widgets/common/text/styles/text_styles.dart';
 
-// Eliminamos la importación de login_page.dart ya que AppShell la maneja.
-// import 'features/products/presentation/screens/login_page.dart'; 
+// Nota: la importación de LoginPage se gestiona dentro de AppShell
+// import 'features/products/presentation/screens/login_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -56,7 +56,7 @@ class MyApp extends StatelessWidget {
           labelSmall: TextStyle(fontSize: PixelTextStyles.extraSmall),
         ),
       ),
-      // Establecemos AppShell como la raíz, eliminando los errores de argumentos de LoginPage
+      // Inicialización: AppShell como raíz de la aplicación (gestiona estados Auth/Main)
       home: const AppShell(),
     );
   }

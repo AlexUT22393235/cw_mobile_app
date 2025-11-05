@@ -16,7 +16,7 @@ class PixelCardListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      // Simula el borde "pixelado" con un Box Decoration
+  // Estilizado: borde pixelado utilizando BoxDecoration
       decoration: BoxDecoration(
         border: Border.all(
           color: borderColor,
@@ -29,7 +29,7 @@ class PixelCardListItem extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          // Título
+          // Texto: título en mayúsculas (estilo de énfasis)
           Text(
             title.toUpperCase(),
             style: const TextStyle(
@@ -40,7 +40,7 @@ class PixelCardListItem extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 5.0),
-          // Subtítulo
+          // Texto: subtítulo con opacidad para menor énfasis
           Text(
             subtitle,
             style: TextStyle(

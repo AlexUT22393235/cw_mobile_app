@@ -1,27 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:pixelarticons/pixelarticons.dart'; // 1. IMPORTAR EL PAQUETE
+import 'package:pixelarticons/pixelarticons.dart'; // Importación: paquete de iconos pixelados
 
-// ===================================================================
-// 1. CLASE DE CONFIGURACIÓN DE ÍTEM (NavItemConfig)
-//    Ahora usa IconData de pixelarticons.
-// ===================================================================
+// NavItemConfig: configuración del elemento de la barra de navegación
+// Usa IconData proporcionado por el paquete pixelarticons
 
 class NavItemConfig {
-  // Mantenemos IconData porque Pixel.home es de tipo IconData
-  final IconData icon; 
+  // Comentario: IconData empleado para los iconos de navegación
+  final IconData icon;
   final String label;
   final int index;
 
   const NavItemConfig({
-    required this.icon, 
-    required this.label, 
+    required this.icon,
+    required this.label,
     required this.index,
   });
 }
 
-// ===================================================================
-// 2. WIDGET DE ÍTEM INDIVIDUAL (PixelBottomNavItem) - Actualizado
-// ===================================================================
+// PixelBottomNavItem: widget individual de la barra inferior
 
 class PixelBottomNavItem extends StatelessWidget {
   final IconData icon;
@@ -36,13 +32,13 @@ class PixelBottomNavItem extends StatelessWidget {
     required this.isSelected,
     required this.onTap,
   });
-  
-  // Constante de color compartida
+
+  // Constante de color: color por defecto del ítem
   static const Color _coldWarBlue = Color(0xFF33FFC4);
 
   @override
   Widget build(BuildContext context) {
-    // El color cambia si está seleccionado
+    // Estilo: color cambia cuando el ítem está seleccionado
     final Color itemColor = isSelected ? _coldWarBlue : Colors.white;
 
     return GestureDetector(
@@ -51,19 +47,15 @@ class PixelBottomNavItem extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Icon(
-            icon,
-            color: itemColor,
-            size: 24.0,
-          ),
+          Icon(icon, color: itemColor, size: 24.0),
           const SizedBox(height: 4.0),
           Text(
             label,
             style: TextStyle(
               color: itemColor,
               fontSize: 10.0,
-              // Asumo que 'PixelFont' es tu fuente pixelada
-              fontFamily: 'PixelFont', 
+              // Tip: usar la fuente personalizada PixelFont para texto pequeño
+              fontFamily: 'PixelFont',
             ),
           ),
         ],
@@ -72,22 +64,20 @@ class PixelBottomNavItem extends StatelessWidget {
   }
 }
 
-// ===================================================================
-// 3. WIDGET DE BARRA COMPUESTA (PixelBottomNavBar) - Actualizado
-// ===================================================================
+// PixelBottomNavBar: widget compuesto que agrupa varios elementos de navegación
 
 class PixelBottomNavBar extends StatelessWidget {
   final int selectedIndex;
   final Function(int) onItemTapped;
 
-  // Definición de todos los elementos de la barra
-  // 2. REEMPLAZO DE ICONS.xxx POR PIXEL.xxx (usando íconos equivalentes)
+  // Configuración: lista de NavItemConfig que define íconos y etiquetas
+  // Notas: se han usado iconos equivalentes del paquete Pixel
   static const List<NavItemConfig> items = [
-    NavItemConfig(icon: Pixel.home, label: 'Home', index: 0),       // Icons.home -> Pixel.home
-    NavItemConfig(icon: Pixel.book, label: 'Lore', index: 1),       // Icons.menu_book -> Pixel.book o Pixel.archive
-    NavItemConfig(icon: Pixel.file, label: 'Assets', index: 2),      // Icons.inventory -> Pixel.box o Pixel.archive
-    NavItemConfig(icon: Pixel.chat, label: 'Chatbot', index: 3),    // Icons.chat_bubble -> Pixel.chat
-    NavItemConfig(icon: Pixel.close, label: 'Salir', index: 4),     // Icons.person -> Pixel.user
+    NavItemConfig(icon: Pixel.home, label: 'Home', index: 0),
+    NavItemConfig(icon: Pixel.book, label: 'Lore', index: 1),
+    NavItemConfig(icon: Pixel.file, label: 'Assets', index: 2),
+    NavItemConfig(icon: Pixel.chat, label: 'Chatbot', index: 3),
+    NavItemConfig(icon: Pixel.close, label: 'Salir', index: 4),
   ];
 
   const PixelBottomNavBar({
@@ -96,7 +86,7 @@ class PixelBottomNavBar extends StatelessWidget {
     required this.onItemTapped,
   });
 
-  // Constantes de estilo
+  // Constantes de estilo para la barra inferior
   static const Color _coldWarBlue = Color(0xFF33FFC4);
   static const Color _darkBackground = Color(0xFF1A1A2E);
 
@@ -106,10 +96,8 @@ class PixelBottomNavBar extends StatelessWidget {
 
     return Container(
       decoration: const BoxDecoration(
-        border: Border(
-          top: BorderSide(color: _coldWarBlue, width: 2.0),
-        ),
-        color: _darkBackground, 
+        border: Border(top: BorderSide(color: _coldWarBlue, width: 2.0)),
+        color: _darkBackground,
       ),
       padding: EdgeInsets.only(top: 8.0, bottom: 8.0 + bottomPadding),
       child: Row(
@@ -121,7 +109,7 @@ class PixelBottomNavBar extends StatelessWidget {
             isSelected: selectedIndex == item.index,
             onTap: () => onItemTapped(item.index),
           );
-        }).toList(), 
+        }).toList(),
       ),
     );
   }

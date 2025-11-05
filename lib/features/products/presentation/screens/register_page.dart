@@ -1,30 +1,31 @@
 import 'package:flutter/material.dart';
 
-// Importaciones del backend
-import '/features/auth/data/auth_api.dart'; 
+// Importaciones: módulos de backend y utilidades asíncronas
+import '/features/auth/data/auth_api.dart';
 import 'dart:async'; // Necesario para Future y async
 
-// Importación del layout genérico
-import '../screens/general/basic_general_screen.dart'; 
+// Importación: layout base reutilizable (BasicGeneralScreen)
+import '../screens/general/basic_general_screen.dart';
 // Importaciones de componentes de UI
 import '../widgets/common/pixel_text_field.dart';
 import '../widgets/common/pixel_button.dart';
-import '../widgets/common/text/pixel_text.dart'; 
+import '../widgets/common/text/pixel_text.dart';
 
-// Definimos el tipo de función para los callbacks
-typedef VoidCallback = void Function(); 
+// Declaración: tipos de callback usados por este formulario
+typedef VoidCallback = void Function();
 
 class RegisterPage extends StatefulWidget {
   // Callbacks requeridos para la maquetación interna del AppShell
   final VoidCallback onLoginRequested; // Enlace -> Volver a Login
-  final VoidCallback onRegisterRequested; // Botón REGISTRARME (Callback para el AppShell)
+  final VoidCallback
+  onRegisterRequested; // Botón REGISTRARME (Callback para el AppShell)
 
   const RegisterPage({
     super.key,
     required this.onLoginRequested,
     required this.onRegisterRequested,
   });
-  
+
   @override
   State<RegisterPage> createState() => _RegisterPageState();
 }
@@ -32,8 +33,9 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   // 1. CONTROLADORES Y ESTADO
   // El backend espera email, password y display_name.
-  late final TextEditingController _emailController;      // Corresponde a email
-  late final TextEditingController _displayNameController; // Corresponde a display_name (anteriormente 'usuario')
+  late final TextEditingController _emailController; // Corresponde a email
+  late final TextEditingController
+  _displayNameController; // Corresponde a display_name (anteriormente 'usuario')
   late final TextEditingController _passwordController;
   late final TextEditingController _confirmPasswordController;
 
@@ -44,7 +46,7 @@ class _RegisterPageState extends State<RegisterPage> {
     super.initState();
     // Renombrado de controllers:
     _emailController = TextEditingController();
-    _displayNameController = TextEditingController(); 
+    _displayNameController = TextEditingController();
     _passwordController = TextEditingController();
     _confirmPasswordController = TextEditingController();
   }
@@ -79,23 +81,27 @@ class _RegisterPageState extends State<RegisterPage> {
       return;
     }
 
-    setState(() { _isLoading = true; });
+    setState(() {
+      _isLoading = true;
+    });
 
     try {
       // Llamar al servicio API
       final result = await AuthApi().signUp(email, password, displayName);
-      
+
       // Registro Exitoso: Se imprime el token (debería guardarse)
       print('Registro Exitoso. Token: ${result['access_token']}');
-      
+
       // Navegar a la pantalla principal o de inicio de sesión
       // Usamos onLoginRequested para volver al Login y que el usuario inicie sesión
-      widget.onLoginRequested(); 
+      widget.onLoginRequested();
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Registro completado. ¡Inicia sesión!'), backgroundColor: Color(0xFF33FFC4)),
+        const SnackBar(
+          content: Text('Registro completado. ¡Inicia sesión!'),
+          backgroundColor: Color(0xFF33FFC4),
+        ),
       );
-      
     } catch (e) {
       // Mostrar error del backend (ej: "El usuario ya existe" o "Contraseña débil")
       ScaffoldMessenger.of(context).showSnackBar(
@@ -105,39 +111,51 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       );
     } finally {
-      setState(() { _isLoading = false; });
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
-    const Color coldWarBlue = Color(0xFF33FFC4); 
+    const Color coldWarBlue = Color(0xFF33FFC4);
 
     return BasicContentLayout(
       sectionTitleText: 'REGÍSTRATE',
-      
+
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           // Campos
           // ⚠️ CAMBIO: Email
-          PixelTextField(labelText: 'EMAIL', controller: _emailController), 
+          PixelTextField(labelText: 'EMAIL', controller: _emailController),
           const SizedBox(height: 15.0),
           // ⚠️ CAMBIO: Display Name
-          PixelTextField(labelText: 'USUARIO', controller: _displayNameController),
+          PixelTextField(
+            labelText: 'USUARIO',
+            controller: _displayNameController,
+          ),
           const SizedBox(height: 15.0),
           // Contraseñas
-          PixelTextField(labelText: 'CONTRASEÑA', obscureText: true, controller: _passwordController),
+          PixelTextField(
+            labelText: 'CONTRASEÑA',
+            obscureText: true,
+            controller: _passwordController,
+          ),
           const SizedBox(height: 15.0),
-          PixelTextField(labelText: 'CONFIRMAR', obscureText: true, controller: _confirmPasswordController),
+          PixelTextField(
+            labelText: 'CONFIRMAR',
+            obscureText: true,
+            controller: _confirmPasswordController,
+          ),
           const SizedBox(height: 30.0),
 
           // Botón REGISTRARME: Llama a la lógica de la API
           PixelButton(
-            text: _isLoading ? 'CREANDO USUARIO...' : 'REGISTRARME', 
-            onPressed: _isLoading ? null : _handleRegister
-          ), 
+            text: _isLoading ? 'CREANDO USUARIO...' : 'REGISTRARME',
+            onPressed: _isLoading ? null : _handleRegister,
+          ),
           const SizedBox(height: 25.0),
 
           // Enlaces inferiores
@@ -148,7 +166,9 @@ class _RegisterPageState extends State<RegisterPage> {
               PixelText.bodySmall('¿Ya tienes cuenta?', color: Colors.white70),
               const SizedBox(width: 4.0),
               GestureDetector(
-                onTap: _isLoading ? null : widget.onLoginRequested, // Deshabilitar si carga
+                onTap: _isLoading
+                    ? null
+                    : widget.onLoginRequested, // Deshabilitar si carga
                 child: PixelText.bodySmall('INICIA SESIÓN', color: coldWarBlue),
               ),
             ],
