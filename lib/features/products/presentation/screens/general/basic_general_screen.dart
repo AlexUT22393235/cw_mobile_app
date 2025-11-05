@@ -18,28 +18,59 @@ class BasicContentLayout extends StatelessWidget {
     required this.content,
   });
 
+  // Espacio vertical que queremos dejar en la parte superior del marco
+  static const double _topMarginSpace = 48.0; 
+  // Padding lateral consistente
+  static const double _horizontalPadding = 24.0; 
+  static const double _verticalPadding = 24.0; 
+
   @override
   Widget build(BuildContext context) {
-    // Usamos el SingleChildScrollView para manejar el desbordamiento en pantallas pequeñas
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(24.0), // Padding de la página
-      
-      // 1. El marco que se adapta al contenido (PixelFrameCard)
-      child: PixelFrameCard(
-        child: Column(
-          mainAxisSize: MainAxisSize.min, // Ajusta el tamaño al contenido
-          children: <Widget>[
-            // Título Principal Fijo
-            const ApplicationTitle(titleText: 'COLDWAR'),
+    // Usamos LayoutBuilder para obtener las restricciones de altura disponibles.
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Usamos el SingleChildScrollView para manejar el desbordamiento en pantallas pequeñas
+        return SingleChildScrollView(
+          // CRUCIAL: Añadimos AlwaysScrollableScrollPhysics para centrar contenido corto.
+          physics: const AlwaysScrollableScrollPhysics(),
+          
+          // === Padding Externo Ajustado ===
+          padding: const EdgeInsets.only(
+            top: _topMarginSpace, // Margen superior del marco (48.0)
+            left: _horizontalPadding,
+            right: _horizontalPadding,
+            bottom: _verticalPadding, // Margen inferior del marco (24.0)
+          ),
+          
+          // CRUCIAL: Usamos ConstrainedBox para forzar que el contenido ocupe
+          // al menos la altura restante del área del SingleChildScrollView.
+          child: ConstrainedBox(
+            // La altura mínima es la altura disponible menos el padding vertical total
+            // (top + bottom) que está fuera del marco de la tarjeta.
+            constraints: BoxConstraints(
+              minHeight: constraints.maxHeight - (_topMarginSpace + _verticalPadding),
+            ),
+            child: Center(
+              // 1. El marco que se adapta al contenido (PixelFrameCard)
+              child: PixelFrameCard(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min, // Ajusta el tamaño al contenido
+                  children: <Widget>[
+                    // Título Principal Fijo
+                    const ApplicationTitle(titleText: 'COLDWAR'),
 
-            // Título de la Sección (Variable: Login o Registro)
-            SectionTitle(titleText: sectionTitleText),
+                    // Título de la Sección (Variable: Login o Registro)
+                    SectionTitle(titleText: sectionTitleText),
 
-            // Contenido Dinámico (Campos, Botones, Enlaces)
-            content,
-          ],
-        ),
-      ),
+                    // Contenido Dinámico (Campos, Botones, Enlaces)
+                    content,
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

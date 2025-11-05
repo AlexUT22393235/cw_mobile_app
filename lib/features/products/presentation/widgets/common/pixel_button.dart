@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 class PixelButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;
+
+  final IconData? icon;
   final Color color;
 
   const PixelButton({
@@ -10,6 +12,7 @@ class PixelButton extends StatelessWidget {
     required this.text,
     this.onPressed,
     this.color = const Color(0xFF00C7B1), // Color turquesa
+    this.icon,
   }) : super(key: key);
 
   @override

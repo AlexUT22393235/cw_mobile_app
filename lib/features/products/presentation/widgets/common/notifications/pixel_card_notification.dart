@@ -36,7 +36,7 @@ class PixelCardListItem extends StatelessWidget {
               color: Color(0xFF33FFC4), // Color turquesa de énfasis
               fontSize: 18.0,
               fontWeight: FontWeight.bold,
-              fontFamily: 'PixelFont',
+              fontFamily: 'PressStart2P',
             ),
           ),
           const SizedBox(height: 5.0),
@@ -46,7 +46,7 @@ class PixelCardListItem extends StatelessWidget {
             style: TextStyle(
               color: Colors.white.withOpacity(0.7),
               fontSize: 14.0,
-              fontFamily: 'PixelFont',
+              fontFamily: 'PressStart2P',
             ),
           ),
         ],

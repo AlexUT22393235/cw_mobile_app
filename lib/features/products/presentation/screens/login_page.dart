@@ -1,26 +1,32 @@
 import 'package:flutter/material.dart';
 
 // Importación del layout genérico
-
-import '../screens/general/basic_general_screen.dart';
-
-
+import '../screens/general/basic_general_screen.dart'; 
+// Importaciones de componentes de UI
 import '../widgets/common/pixel_text_field.dart';
 import '../widgets/common/pixel_button.dart';
 import '../widgets/common/text/pixel_text.dart'; 
 
+// Definimos el tipo de función para los callbacks
+typedef VoidCallback = void Function(); 
 
 class LoginPage extends StatefulWidget {
-  final VoidCallback onRegisterRequested;
+  // Callbacks requeridos para la maquetación interna del AppShell
+  final VoidCallback onLoginRequested; // Botón ENTRAR -> Ir a Home
+  final VoidCallback onRegisterRequested; // Enlace -> Ir a Register
 
-  const LoginPage({Key? key, required this.onRegisterRequested})
-    : super(key: key);
-
+  const LoginPage({
+    super.key,
+    required this.onLoginRequested,
+    required this.onRegisterRequested,
+  });
+  
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
+  // Controladores (se mantienen para la maquetación)
   late final TextEditingController _usuarioController;
   late final TextEditingController _passwordController;
 
@@ -38,68 +44,40 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
+  // Las funciones de navegación desaparecen, ya que se usa el callback del widget
+
   @override
   Widget build(BuildContext context) {
-    // El color coldWarBlue es necesario aquí para el enlace de "REGÍSTRATE"
     const Color coldWarBlue = Color(0xFF33FFC4); 
 
-    // Reemplazamos toda la estructura externa por el layout modular
     return BasicContentLayout(
       sectionTitleText: 'INICIA SESIÓN',
       
-      // El 'content' es el Column que contiene los campos y acciones
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          // Campo Usuario
-          PixelTextField(
-            labelText: 'USUARIO',
-            controller: _usuarioController,
-          ),
+          // Campos
+          PixelTextField(labelText: 'USUARIO', controller: _usuarioController),
           const SizedBox(height: 15.0),
-
-          // Campo Contraseña
-          PixelTextField(
-            labelText: 'CONTRASEÑA',
-            obscureText: true,
-            controller: _passwordController,
-          ),
+          PixelTextField(labelText: 'CONTRASEÑA', obscureText: true, controller: _passwordController),
           const SizedBox(height: 30.0),
 
           // Botón ENTRAR
-          PixelButton(
-            text: 'ENTRAR',
-            onPressed: () {
-              // Lógica de autenticación
-            },
-          ),
+          // Llama al callback que le indica a AppShell que cambie a HomePage
+          PixelButton(text: 'ENTRAR', onPressed: widget.onLoginRequested), 
           const SizedBox(height: 25.0),
 
           // Enlaces inferiores
-          Column(
+          Wrap(
+            alignment: WrapAlignment.center,
+            crossAxisAlignment: WrapCrossAlignment.center,
             children: [
-              PixelText.bodySmall(
-                '¿Olvidaste tu contraseña?',
-                color: Colors.white70,
-              ),
-              const SizedBox(height: 8.0),
-              Wrap(
-                alignment: WrapAlignment.center,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                children: [
-                  PixelText.bodySmall(
-                    '¿No tienes cuenta?',
-                    color: Colors.white70,
-                  ),
-                  const SizedBox(width: 4.0),
-                  GestureDetector(
-                    onTap: widget.onRegisterRequested,
-                    child: PixelText.bodySmall(
-                      'REGÍSTRATE',
-                      color: coldWarBlue,
-                    ),
-                  ),
-                ],
+              PixelText.bodySmall('¿No tienes cuenta?', color: Colors.white70),
+              const SizedBox(width: 4.0),
+              GestureDetector(
+                // Llama al callback que le indica a AppShell que cambie a RegisterPage
+                onTap: widget.onRegisterRequested, 
+                child: PixelText.bodySmall('REGÍSTRATE', color: coldWarBlue),
               ),
             ],
           ),
