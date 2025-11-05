@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../widgets/common/pixel_bottom_nav_item.dart'; 
 import 'home_page.dart';     
 import 'chatbot_page.dart';  
+import 'assets_page.dart'; // <--- 1. IMPORTAR LA NUEVA PÁGINA
 
 class NavigationGateway extends StatefulWidget {
   const NavigationGateway({super.key});
@@ -23,7 +24,7 @@ class _NavigationGatewayState extends State<NavigationGateway> {
     // Index 1: LORE (Placeholder)
     Center(child: Text("Lore Page Placeholder", style: TextStyle(color: Colors.white))), 
     // Index 2: ASSETS (Placeholder)
-    Center(child: Text("Assets Page Placeholder", style: TextStyle(color: Colors.white))), 
+    AssetsPage(), // <--- 2. AÑADIR LA NUEVA PÁGINA
     // Index 3: CHATBOT 
     ChatbotPage(), 
     // Index 4: PERFIL (Placeholder)

@@ -87,7 +87,7 @@ class PixelBottomNavBar extends StatelessWidget {
     NavItemConfig(icon: Pixel.book, label: 'Lore', index: 1),       // Icons.menu_book -> Pixel.book o Pixel.archive
     NavItemConfig(icon: Pixel.file, label: 'Assets', index: 2),      // Icons.inventory -> Pixel.box o Pixel.archive
     NavItemConfig(icon: Pixel.chat, label: 'Chatbot', index: 3),    // Icons.chat_bubble -> Pixel.chat
-    NavItemConfig(icon: Pixel.user, label: 'Perfil', index: 4),     // Icons.person -> Pixel.user
+    NavItemConfig(icon: Pixel.close, label: 'Salir', index: 4),     // Icons.person -> Pixel.user
   ];
 
   const PixelBottomNavBar({
