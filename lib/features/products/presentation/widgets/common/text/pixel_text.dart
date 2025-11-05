@@ -10,6 +10,7 @@ class PixelText extends StatelessWidget {
   final TextAlign textAlign;
   final int? maxLines;
   final TextOverflow? overflow;
+  final double? height; // <--- 1. PROPIEDAD HEIGHT AÑADIDA AL WIDGET
 
   // Constructor base
   const PixelText(
@@ -21,30 +22,20 @@ class PixelText extends StatelessWidget {
     this.textAlign = TextAlign.center,
     this.maxLines,
     this.overflow,
+    this.height, // <--- 2. AÑADIDO AL CONSTRUCTOR BASE
   }) : super(key: key);
 
   // Factory constructors como alternativa
-  factory PixelText.displayLarge(
+  
+  // ===================================
+  // NUEVO/RENOMBRADO: PixelText.headline
+  // ===================================
+  factory PixelText.headline(
     String text, {
     Key? key,
     Color color = Colors.white,
     TextAlign textAlign = TextAlign.center,
-  }) {
-    return PixelText(
-      text,
-      key: key,
-      fontSize: PixelTextStyles.display,
-      color: color,
-      fontWeight: FontWeight.bold,
-      textAlign: textAlign,
-    );
-  }
-
-  factory PixelText.headlineMedium(
-    String text, {
-    Key? key,
-    Color color = Colors.white,
-    TextAlign textAlign = TextAlign.center,
+    double? height, // <--- ACEPTA HEIGHT
   }) {
     return PixelText(
       text,
@@ -53,14 +44,36 @@ class PixelText extends StatelessWidget {
       color: color,
       fontWeight: FontWeight.bold,
       textAlign: textAlign,
+      height: height, // <--- PASA HEIGHT
     );
   }
+
+  factory PixelText.displayLarge(
+    String text, {
+    Key? key,
+    Color color = Colors.white,
+    TextAlign textAlign = TextAlign.center,
+    double? height,
+  }) {
+    return PixelText(
+      text,
+      key: key,
+      fontSize: PixelTextStyles.display,
+      color: color,
+      fontWeight: FontWeight.bold,
+      textAlign: textAlign,
+      height: height,
+    );
+  }
+  
+  // (Omitimos headlineMedium si headline es el nuevo nombre)
 
   factory PixelText.titleLarge(
     String text, {
     Key? key,
     Color color = Colors.white,
     TextAlign textAlign = TextAlign.center,
+    double? height,
   }) {
     return PixelText(
       text,
@@ -69,14 +82,19 @@ class PixelText extends StatelessWidget {
       color: color,
       fontWeight: FontWeight.bold,
       textAlign: textAlign,
+      height: height,
     );
   }
 
+  // ===================================
+  // MODIFICADO: PixelText.bodyLarge
+  // ===================================
   factory PixelText.bodyLarge(
     String text, {
     Key? key,
     Color color = Colors.white,
     TextAlign textAlign = TextAlign.center,
+    double? height, // <--- ACEPTA HEIGHT
   }) {
     return PixelText(
       text,
@@ -84,6 +102,7 @@ class PixelText extends StatelessWidget {
       fontSize: PixelTextStyles.large,
       color: color,
       textAlign: textAlign,
+      height: height, // <--- PASA HEIGHT
     );
   }
 
@@ -92,6 +111,7 @@ class PixelText extends StatelessWidget {
     Key? key,
     Color color = Colors.white,
     TextAlign textAlign = TextAlign.center,
+    double? height,
   }) {
     return PixelText(
       text,
@@ -99,6 +119,7 @@ class PixelText extends StatelessWidget {
       fontSize: PixelTextStyles.medium,
       color: color,
       textAlign: textAlign,
+      height: height,
     );
   }
 
@@ -107,6 +128,7 @@ class PixelText extends StatelessWidget {
     Key? key,
     Color color = Colors.white,
     TextAlign textAlign = TextAlign.center,
+    double? height,
   }) {
     return PixelText(
       text,
@@ -114,6 +136,7 @@ class PixelText extends StatelessWidget {
       fontSize: PixelTextStyles.small,
       color: color,
       textAlign: textAlign,
+      height: height,
     );
   }
 
@@ -129,6 +152,7 @@ class PixelText extends StatelessWidget {
         fontSize: fontSize ?? PixelTextStyles.medium,
         fontWeight: fontWeight,
         fontFamily: 'PressStart2P',
+        height: height, // <--- 3. HEIGHT AÑADIDO AL ESTILO
       ),
     );
   }
