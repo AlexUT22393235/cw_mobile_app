@@ -72,18 +72,29 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
       // Paso 1: invocar servicio de autenticación (API)
-      final result = await AuthApi().signIn(email, password);
+      await AuthApi().signIn(email, password);
 
       // Paso 2: éxito -> persistir token de forma segura (no mostrado aquí)
-      print('Login Exitoso. Token: ${result['access_token']}');
+      // print('Login Exitoso. Token: ${result['access_token']}'); // Se mantiene la referencia
 
       // Paso 3: notificar al AppShell para la navegación a la pantalla principal
       widget.onLoginRequested();
     } catch (e) {
       // Manejo de errores: mostrar mensaje de error al usuario
+      String errorMessage = e.toString().replaceFirst('Exception: ', '');
+
+      // 1. Manejo de error de credenciales inválidas (Mensaje explícito del backend)
+      if (errorMessage.contains("Credenciales inválidas")) {
+        errorMessage = 'Credenciales no reconocidas. Verifica tu email y contraseña.';
+      } 
+      // 2. Manejo de error de conexión o red
+      else if (errorMessage.contains("Fallo de conexión") || errorMessage.contains("SocketException")) {
+        errorMessage = "Lo sentimos, hay un error de conexión :c . Inténtalo más tarde.";
+      }
+      
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(e.toString().replaceFirst('Exception: ', '')),
+          content: Text(errorMessage),
           backgroundColor: Colors.red.shade900,
         ),
       );
