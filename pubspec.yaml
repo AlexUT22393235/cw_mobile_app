@@ -37,7 +37,7 @@ dependencies:
   pixelarticons: ^0.4.0 # Reemplaza con la última versión
   http: ^1.1.0 # Usa la última versión estable
   shared_preferences: ^2.2.2
-
+  http: ^1.2.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
