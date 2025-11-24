@@ -1,10 +1,6 @@
-// Archivo: lib/widgets/chatbot/chat_message.dart
-
 import 'package:flutter/material.dart';
-
-// Importaciones necesarias
-import '../common/text/pixel_text.dart'; 
-import '../../screens/chatbot_page.dart'; // Para acceder a las constantes de color
+import '../common/text/pixel_text.dart';
+import '../../screens/chatbot_page.dart';
 
 class ChatMessage extends StatelessWidget {
   final String text;
@@ -14,27 +10,41 @@ class ChatMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Alineación: derecha (usuario) o izquierda (bot)
-    final alignment = isUser ? Alignment.centerRight : Alignment.centerLeft;
-    // Color del texto, usando las constantes de ChatbotPage
-    final color = isUser ? ChatbotPage.userMessageColor : ChatbotPage.botMessageColor;
+    final maxWidth = MediaQuery.of(context).size.width * 0.70;
+
+    final bubbleColor =
+        isUser ? ChatbotPage.userMessageColor : ChatbotPage.botMessageColor;
+
+    final alignment =
+        isUser ? Alignment.centerRight : Alignment.centerLeft;
+
+    if (text == "___typing___") {
+      return Container(
+        alignment: alignment,
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+        child: const Text(
+          "Escribiendo...",
+          style: TextStyle(
+            fontFamily: 'PressStart2P',
+            fontSize: 12,
+            color: ChatbotPage.botMessageColor,
+          ),
+        ),
+      );
+    }
 
     return Container(
       alignment: alignment,
-      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
       child: Container(
-        constraints: const BoxConstraints(maxWidth: 280), // Limita el ancho de la burbuja
-        padding: const EdgeInsets.all(8.0),
+        constraints: BoxConstraints(maxWidth: maxWidth),
+        padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          // Borde con estilo pixel art
-          border: Border.all(
-            color: color, 
-            width: 1.0,
-          ),
+          border: Border.all(color: bubbleColor, width: 1.5),
         ),
         child: PixelText.bodyMedium(
           text,
-          color: color,
+          color: bubbleColor,
         ),
       ),
     );

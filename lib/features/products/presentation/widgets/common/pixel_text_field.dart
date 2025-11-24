@@ -5,51 +5,58 @@ class PixelTextField extends StatelessWidget {
   final bool obscureText;
   final TextEditingController? controller;
   final TextInputType keyboardType;
-  final Widget? suffixIcon; // [técnico] Nueva propiedad opcional para el ícono al final
+  final Widget? suffixIcon;
+
+  /// 👈 NUEVO: callback cuando se presiona ENTER
+  final Function(String)? onSubmitted;
 
   const PixelTextField({
-    super.key, // Se pasa la clave al constructor padre (convención Flutter)
+    super.key,
     required this.labelText,
     this.obscureText = false,
     this.controller,
     this.keyboardType = TextInputType.text,
-    this.suffixIcon, // [técnico] Se acepta la nueva propiedad en el constructor
+    this.suffixIcon,
+    this.onSubmitted, // 👈 se recibe aquí
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white, // Fondo: color blanco para el campo
-        borderRadius: BorderRadius.circular(8.0), // Bordes: radio de 8px
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8.0),
       ),
-      // Wrapping: TextField envuelto en Material para controlar su renderizado
-      child: Material( 
-        type: MaterialType.transparency, // Evita que Material añada un fondo adicional
+      child: Material(
+        type: MaterialType.transparency,
         child: TextField(
           controller: controller,
           obscureText: obscureText,
           keyboardType: keyboardType,
           textAlign: TextAlign.left,
+
+          /// 👈 NUEVO: cuando el usuario presione ENTER
+          onSubmitted: onSubmitted,
+
           style: const TextStyle(
-            color: Colors.black, // Estilo: color de texto principal
+            color: Colors.black,
             fontSize: 16.0,
-            fontFamily: 'PressStart2P', // Fuente: PressStart2P (pixelada)
+            fontFamily: 'PressStart2P',
           ),
           decoration: InputDecoration(
-            hintText: labelText.toUpperCase(), // Hint: usar label en mayúsculas como placeholder
+            hintText: labelText.toUpperCase(),
             hintStyle: TextStyle(
-              color: Colors.grey[600], // Color del placeholder
+              color: Colors.grey[600],
               fontSize: 14.0,
               fontFamily: 'PressStart2P',
             ),
-            border: InputBorder.none, // Input: eliminar borde nativo para estilo personalizado
-            contentPadding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
-            
-            // ⚠️ IMPLEMENTACIÓN CLAVE: Se añade el ícono de sufijo de forma opcional
+            border: InputBorder.none,
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
+
             suffixIcon: suffixIcon,
-            // [técnico] Ajustar el padding del ícono si es necesario para el estilo pixelado
-            suffixIconConstraints: const BoxConstraints(minWidth: 40, minHeight: 40), 
+            suffixIconConstraints:
+                const BoxConstraints(minWidth: 40, minHeight: 40),
           ),
         ),
       ),

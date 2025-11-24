@@ -9,7 +9,6 @@ import 'features/products/presentation/widgets/common/text/styles/text_styles.da
 void main() {
   runApp(const MyApp());
 }
-
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
