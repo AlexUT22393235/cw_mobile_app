@@ -1,7 +1,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- The INTERNET permission is required for development. Specifically,
-         the Flutter tool needs it to communicate with the running application
-         to allow setting breakpoints, to provide hot reload, etc.
-    -->
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <!-- Permisos deben ir FUERA del <application> -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:usesCleartextTraffic="true"
+        android:label="ColdWars"
+        android:icon="@mipmap/ic_launcher">
+
+        <!-- Aquí siguen tus activities -->
+        
+    </application>
+
 </manifest>

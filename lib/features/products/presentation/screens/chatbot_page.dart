@@ -25,7 +25,7 @@ class _ChatbotPageState extends State<ChatbotPage> {
   final List<ChatMessage> _messages = [];
 
   /// 👉 Endpoint público
-  final String apiUrl = "http://localhost:8000/api/v1/chat/advice/public";
+  final String apiUrl = "http://10.10.49.52:8000/api/v1/chat/advice";
 
   /// 👉 Para usar login, cambia por:
   /// final String apiUrl = "http://localhost:8000/api/v1/chat/advice";

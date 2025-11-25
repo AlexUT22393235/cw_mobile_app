@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 
 class AuthApi {
   // Asegúrate de usar la URL y puerto correctos
-  static const String _baseUrl = 'http://localhost:8000/api/v1/auth';
+  static const String _baseUrl = 'http://10.10.49.52:8000/api/v1/auth';
   // NOTA: Usamos 10.0.2.2 si estás usando el emulador de Android 
   // (es el alias para 127.0.0.1/localhost del host machine). 
   // Si usas iOS/Chrome, usa http://localhost:8000.

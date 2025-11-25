@@ -13,7 +13,7 @@ import '../screens/general/basic_general_screen.dart';
 /// =========================
 
 // Cambia esto por tu dominio / IP si no es localhost
-const String apiBase = "http://localhost:8000";
+const String apiBase = "http://10.10.49.52:8000";
 
 /// Construye URL absoluta a partir de la ruta en /static
 /// y reemplaza espacios por %20 para que la URL sea válida.
